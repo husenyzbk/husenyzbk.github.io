@@ -153,25 +153,8 @@
         <span>Double tap to zoom</span>
     </div>
 
-    <!-- Aperture / iris page transition — 6 individually-shaded SVG blades -->
-    <svg id="aperture-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-            <!-- Each gradient goes dark on the leading edge → lighter on the trailing edge,
-                 so adjacent blades have opposite tones at their shared boundary. -->
-            <linearGradient id="bg0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#080808"/><stop offset="100%" stop-color="#282828"/></linearGradient>
-            <linearGradient id="bg1" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#080808"/><stop offset="100%" stop-color="#282828"/></linearGradient>
-            <linearGradient id="bg2" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#080808"/><stop offset="100%" stop-color="#282828"/></linearGradient>
-            <linearGradient id="bg3" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#080808"/><stop offset="100%" stop-color="#282828"/></linearGradient>
-            <linearGradient id="bg4" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#080808"/><stop offset="100%" stop-color="#282828"/></linearGradient>
-            <linearGradient id="bg5" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#080808"/><stop offset="100%" stop-color="#282828"/></linearGradient>
-        </defs>
-        <path id="b0" fill="url(#bg0)" stroke="rgba(60,60,60,0.4)" stroke-width="0.8"/>
-        <path id="b1" fill="url(#bg1)" stroke="rgba(60,60,60,0.4)" stroke-width="0.8"/>
-        <path id="b2" fill="url(#bg2)" stroke="rgba(60,60,60,0.4)" stroke-width="0.8"/>
-        <path id="b3" fill="url(#bg3)" stroke="rgba(60,60,60,0.4)" stroke-width="0.8"/>
-        <path id="b4" fill="url(#bg4)" stroke="rgba(60,60,60,0.4)" stroke-width="0.8"/>
-        <path id="b5" fill="url(#bg5)" stroke="rgba(60,60,60,0.4)" stroke-width="0.8"/>
-    </svg>
+    <!-- Iris / aperture page transition overlay -->
+    <div id="aperture-overlay" aria-hidden="true"></div>
 
     <script src="script.js"></script>
 </body>
