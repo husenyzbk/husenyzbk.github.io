@@ -209,8 +209,9 @@ function _makeCard(album, subtitle, action) {
     card.setAttribute('tabindex', '0');
     card.setAttribute('aria-label', `Open ${album.title}`);
 
+    const thumbSrc = album.thumbnail ? toThumbPath(album.thumbnail) : '';
     card.innerHTML = `
-        <img src="${album.thumbnail || ''}" alt="${album.title}">
+        <img src="${thumbSrc}" alt="${album.title}">
         <div class="category-card-overlay">
             <h3>${album.title}</h3>
             <span>${subtitle}</span>
@@ -292,7 +293,7 @@ function openSubcategoryPage(parentKey) {
 
     document.getElementById('subcategories-title').textContent = parent.title;
     document.getElementById('subcategories-bg-overlay').style.backgroundImage =
-        `url('${parent.thumbnail}')`;
+        `url('${toThumbPath(parent.thumbnail)}')`;
 
     const grid = document.getElementById('subcategories-grid');
     grid.innerHTML = '';
@@ -320,8 +321,9 @@ function _openFlatAlbum(albumKey, album, parentKey) {
 
     const fallbackThumb = parentKey ? ALBUMS[parentKey].thumbnail : '';
     document.getElementById('album-title').textContent = album.title;
+    const bgThumb = album.thumbnail || fallbackThumb;
     document.getElementById('album-bg-overlay').style.backgroundImage =
-        `url('${album.thumbnail || fallbackThumb}')`;
+        `url('${bgThumb ? toThumbPath(bgThumb) : ''}')`;
 
     const grid = document.getElementById('album-grid');
     grid.innerHTML = '';
