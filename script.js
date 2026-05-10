@@ -46,7 +46,7 @@ const ALBUMS = {
 
     animals: {
         title:     "Animals",
-        thumbnail: "images/Thumbnails/IMG_4100.PNG",
+        thumbnail: "images/Thumbnails/IMG_4100.png",
         photos: [
             "images/Animals/Lizard.jpg",
             "images/Animals/Fennec.jpg",
@@ -72,7 +72,7 @@ const ALBUMS = {
 
     people: {
         title:     "People",
-        thumbnail: "images/Thumbnails/TH_Lizard.jpg",
+        thumbnail: "",
         subAlbums: {
             events: {
                 title:     "Events",
@@ -143,6 +143,7 @@ const ALBUMS = {
                     "images/Outdoors/Miscellaneous/Pyramid2.jpg",
                     "images/Outdoors/Miscellaneous/Pyramid1.jpg",
                     "images/Outdoors/Miscellaneous/Pyramid3.jpg",
+                    "images/Outdoors/Miscellaneous/moon.jpg",
                     "images/Outdoors/Miscellaneous/Mercedes.jpg",
                     "images/Outdoors/Miscellaneous/Wall art.jpg", 
                     "images/Outdoors/Miscellaneous/beach.jpg",
@@ -178,7 +179,7 @@ let switchTimeout     = null;
 
 const ZOOM_STEP = 0.25;
 const ZOOM_MAX  = 4;
-const ZOOM_MIN  = 0.5;
+const ZOOM_MIN  = 1;
 
 /* ================================================
    PATH HELPERS
@@ -277,9 +278,22 @@ function buildCategories() {
    PAGE NAVIGATION
 ================================================ */
 function showPage(pageId, scrollToTop = true) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
-    if (scrollToTop) window.scrollTo({ top: 0 });
+    const incoming = document.getElementById(pageId);
+    const outgoing = document.querySelector('.page.active');
+
+    if (!outgoing || outgoing === incoming) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        incoming.classList.add('active');
+        if (scrollToTop) window.scrollTo({ top: 0 });
+        return;
+    }
+
+    outgoing.classList.add('page-leaving');
+    setTimeout(() => {
+        outgoing.classList.remove('active', 'page-leaving');
+        incoming.classList.add('active');
+        if (scrollToTop) window.scrollTo({ top: 0 });
+    }, 280);
 }
 
 function goHome() {

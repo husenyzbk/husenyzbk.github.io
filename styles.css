@@ -118,12 +118,23 @@ body.viewer-open .fixed-nav { display: none; }
 
 .page.active {
     display: block;
-    animation: pageFadeIn 0.5s ease both;
+    animation: pageFadeIn 0.38s ease both;
+}
+
+.page.page-leaving {
+    display: block;
+    animation: pageFadeOut 0.28s ease both;
+    pointer-events: none;
 }
 
 @keyframes pageFadeIn {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(16px); }
     to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pageFadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-10px); }
 }
 
 /* ================================================
@@ -863,8 +874,10 @@ body.viewer-open .fixed-nav { display: none; }
         transform: none;
     }
 
-    .page.active {
+    .page.active,
+    .page.page-leaving {
         animation: none;
+        opacity: 1;
     }
 
     /* keep a near-instant opacity swap in the viewer so image changes are visible */
