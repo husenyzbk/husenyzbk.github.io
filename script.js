@@ -373,6 +373,7 @@ function openFullscreen(index) {
     updateCounter();
     preloadAdjacent(index);
     document.getElementById('fullscreen-viewer').classList.add('active');
+    showDoubleTapHint();
     document.getElementById('zoom-level').textContent = '100%';
     document.body.style.overflow = 'hidden';
 }
@@ -508,60 +509,35 @@ function initViewerPan() {
 }
 
 /* ================================================
-   SWIPE / PINCH / DOUBLE-TAP TOUCH CONTROLS
+   SWIPE / DOUBLE-TAP TOUCH CONTROLS
 ================================================ */
 function initSwipeControls() {
     const viewer = document.getElementById('fullscreen-viewer');
 
     let startX = 0, startY = 0;
     let lastTouchX = 0, lastTouchY = 0;
-    let touchPanning  = false;
-
-    let pinchStartDist = 0;
-    let pinchStartZoom = 1;
+    let touchPanning = false;
 
     let lastTapTime = 0;
     let lastTapX    = 0;
     let lastTapY    = 0;
 
     viewer.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 2) {
-            pinchStartDist = Math.hypot(
-                e.touches[1].clientX - e.touches[0].clientX,
-                e.touches[1].clientY - e.touches[0].clientY
-            );
-            pinchStartZoom = currentZoom;
-            touchPanning   = false;
-        } else {
-            startX       = e.touches[0].clientX;
-            startY       = e.touches[0].clientY;
-            lastTouchX   = startX;
-            lastTouchY   = startY;
-            touchPanning = currentZoom > 1;
-        }
+        startX       = e.touches[0].clientX;
+        startY       = e.touches[0].clientY;
+        lastTouchX   = startX;
+        lastTouchY   = startY;
+        touchPanning = currentZoom > 1;
     }, { passive: true });
 
     viewer.addEventListener('touchmove', (e) => {
         e.preventDefault();
-
-        if (e.touches.length === 2) {
-            /* pinch to zoom */
-            const dist = Math.hypot(
-                e.touches[1].clientX - e.touches[0].clientX,
-                e.touches[1].clientY - e.touches[0].clientY
-            );
-            currentZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX,
-                pinchStartZoom * dist / pinchStartDist));
-            applyZoom();
-
-        } else if (e.touches.length === 1 && touchPanning) {
-            /* drag to pan when zoomed */
-            currentPan.x += e.touches[0].clientX - lastTouchX;
-            currentPan.y += e.touches[0].clientY - lastTouchY;
-            lastTouchX    = e.touches[0].clientX;
-            lastTouchY    = e.touches[0].clientY;
-            applyTransform();
-        }
+        if (!touchPanning) return;
+        currentPan.x += e.touches[0].clientX - lastTouchX;
+        currentPan.y += e.touches[0].clientY - lastTouchY;
+        lastTouchX    = e.touches[0].clientX;
+        lastTouchY    = e.touches[0].clientY;
+        applyTransform();
     }, { passive: false });
 
     viewer.addEventListener('touchend', (e) => {
@@ -570,7 +546,7 @@ function initSwipeControls() {
         const touch = e.changedTouches[0];
         const now   = Date.now();
 
-        /* double-tap to zoom in / reset */
+        /* double-tap: zoom in to tapped spot, or reset */
         if (now - lastTapTime < 300 &&
             Math.abs(touch.clientX - lastTapX) < 40 &&
             Math.abs(touch.clientY - lastTapY) < 40) {
@@ -594,7 +570,7 @@ function initSwipeControls() {
         lastTapX    = touch.clientX;
         lastTapY    = touch.clientY;
 
-        /* swipe to navigate (only at 1:1 zoom, no panning) */
+        /* swipe to navigate — only at 1:1 zoom */
         if (touchPanning) return;
         const dx = touch.clientX - startX;
         const dy = touch.clientY - startY;
@@ -602,6 +578,21 @@ function initSwipeControls() {
             dx < 0 ? nextImage() : prevImage();
         }
     }, { passive: true });
+}
+
+/* ================================================
+   DOUBLE TAP HINT
+================================================ */
+function showDoubleTapHint() {
+    if (!('ontouchstart' in window)) return;
+    if (localStorage.getItem('dthint')) return;
+
+    const hint = document.getElementById('doubletap-hint');
+    hint.classList.add('active');
+    setTimeout(() => {
+        hint.classList.remove('active');
+        localStorage.setItem('dthint', '1');
+    }, 3000);
 }
 
 /* ================================================

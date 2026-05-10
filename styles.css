@@ -39,9 +39,9 @@ button { font-family: var(--font); cursor: pointer; }
 ================================================ */
 .fixed-nav {
     position: fixed;
-    top: 24px;
-    left: 24px;
-    z-index: 900;
+    top: max(24px, env(safe-area-inset-top, 24px));
+    left: max(24px, env(safe-area-inset-left, 24px));
+    z-index: 9999;
     display: flex;
     gap: 10px;
 }
@@ -701,7 +701,21 @@ button { font-family: var(--font); cursor: pointer; }
     .album-page-content { padding: 100px 20px 60px; }
 
     .viewer-nav { width: 44px; height: 70px; font-size: 2rem; }
-    .album-grid { columns: 2; }
+    .album-grid  { columns: 2; }
+
+    /* Nav buttons — smaller touch targets, safe on all phones */
+    .nav-btn {
+        padding: 8px 14px;
+        font-size: 0.68rem;
+        letter-spacing: 1.5px;
+    }
+
+    /* Hero title — prevent text from overflowing the screen edges */
+    .hero-title {
+        font-size: clamp(1.6rem, 6.5vw, 2.8rem);
+        letter-spacing: 2px;
+        max-width: 100%;
+    }
 }
 
 /* ================================================
@@ -759,6 +773,69 @@ button { font-family: var(--font); cursor: pointer; }
 .img-error {
     opacity: 0.15;
     filter: grayscale(1);
+}
+
+/* ================================================
+   DOUBLE TAP HINT
+================================================ */
+.doubletap-hint {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.doubletap-hint.active {
+    animation: hintLifecycle 3s ease forwards;
+}
+
+@keyframes hintLifecycle {
+    0%   { opacity: 0; }
+    15%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.doubletap-rings {
+    position: relative;
+    width: 64px;
+    height: 64px;
+}
+
+.doubletap-ring {
+    position: absolute;
+    inset: 0;
+    border: 2.5px solid rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    opacity: 0;
+    /* two pulses simulating a double tap */
+    animation: ringPulse 0.55s ease-out 0.4s both,
+               ringPulse 0.55s ease-out 1.2s both;
+}
+
+.doubletap-ring-2 {
+    animation-delay: 0.6s, 1.4s;
+}
+
+@keyframes ringPulse {
+    0%   { transform: scale(0.25); opacity: 1; }
+    100% { transform: scale(1.7);  opacity: 0; }
+}
+
+.doubletap-hint span {
+    color: rgba(255, 255, 255, 0.9);
+    font-family: var(--font);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
 }
 
 /* ================================================
