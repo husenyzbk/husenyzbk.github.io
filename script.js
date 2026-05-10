@@ -277,43 +277,58 @@ function buildCategories() {
 /* ================================================
    PAGE NAVIGATION
 ================================================ */
-/* ── Iris / aperture transition helpers ─────────────────────────────────────
-   Uses clip-path: path() with the nonzero winding rule to punch a hexagonal
-   "iris" hole through a dark overlay.  The outer rectangle winds clockwise
-   (+1); the inner hexagon winds counter-clockwise (-1); every point inside
-   both cancels to 0 = clipped = transparent → that's the aperture opening.
-   fraction=1  →  hole fills the viewport  →  overlay invisible (page shows)
-   fraction=0  →  hole is zero-size        →  overlay covers screen (dark)
+/* ── Aperture / iris transition — 6 SVG blade paths ─────────────────────────
+   Each blade is a sector wedge: a curved inner arc (the iris opening edge) +
+   two radial lines + a far outer edge well beyond the screen.
+   fraction=1  → inner arc at Rmax (off-screen) → all blades invisible → page shows
+   fraction=0  → inner arc at 0   (centre)      → triangles cover full screen
+   Each blade has a linearGradient: dark on its leading edge, lighter on the
+   trailing edge, so adjacent blades contrast at every shared boundary.
 ── */
 let _irisRot = 0;
+const _NB    = 6;
 
-function _irisPath(fraction, rot) {
+function _updateBlades(fraction, rot) {
     const W  = window.innerWidth,  H  = window.innerHeight;
     const cx = W / 2,              cy = H / 2;
-    // Minimum hexagon circumradius that covers every corner at any orientation
-    const Rmax = Math.hypot(cx, cy) / Math.cos(Math.PI / 6) * 1.05;
-    const R    = fraction * Rmax;
+    const Rmax   = Math.hypot(cx, cy) * 1.15;
+    const Rinner = fraction * Rmax;
+    const Router = Rmax * 1.6;
+    const GR     = Math.min(cx, cy) * 0.45;  // gradient axis reference radius
+    const f1     = v => v.toFixed(1);
 
-    // Outer rect — clockwise → winding +1 (visible dark area)
-    const outer = `M0,0 H${W} V${H} H0 Z`;
+    for (let i = 0; i < _NB; i++) {
+        const a1 = (i / _NB) * Math.PI * 2 + rot;
+        const a2 = ((i + 1) / _NB) * Math.PI * 2 + rot;
 
-    // Hexagon vertices at angles 0°, 60°, 120°, 180°, 240°, 300°
-    const pts = Array.from({ length: 6 }, (_, i) => {
-        const a = (i / 6) * Math.PI * 2 + rot;
-        return `${(cx + R * Math.cos(a)).toFixed(1)},${(cy + R * Math.sin(a)).toFixed(1)}`;
-    });
-    // Counter-clockwise order → winding -1 inside → creates the iris hole
-    const inner = `M${pts[0]} ${[5,4,3,2,1].map(i => `L${pts[i]}`).join(' ')} Z`;
+        const ix1 = cx + Rinner * Math.cos(a1),  iy1 = cy + Rinner * Math.sin(a1);
+        const ix2 = cx + Rinner * Math.cos(a2),  iy2 = cy + Rinner * Math.sin(a2);
+        const ox1 = cx + Router * Math.cos(a1),  oy1 = cy + Router * Math.sin(a1);
+        const ox2 = cx + Router * Math.cos(a2),  oy2 = cy + Router * Math.sin(a2);
 
-    return `path('${outer} ${inner}')`;
+        // When Rinner is tiny, collapse to a triangle (avoids degenerate arcs)
+        const d = Rinner < 2
+            ? `M${f1(cx)},${f1(cy)} L${f1(ox1)},${f1(oy1)} L${f1(ox2)},${f1(oy2)} Z`
+            : `M${f1(ix1)},${f1(iy1)} A${f1(Rinner)},${f1(Rinner)} 0 0,1 ${f1(ix2)},${f1(iy2)} L${f1(ox2)},${f1(oy2)} L${f1(ox1)},${f1(oy1)} Z`;
+
+        document.getElementById(`b${i}`).setAttribute('d', d);
+
+        // Gradient: dark (#080808) at a1 edge → lighter (#282828) at a2 edge
+        // Next blade's a1 is dark, so the shared boundary is light|dark = visible seam
+        const grad = document.getElementById(`bg${i}`);
+        grad.setAttribute('x1', f1(cx + GR * Math.cos(a1)));
+        grad.setAttribute('y1', f1(cy + GR * Math.sin(a1)));
+        grad.setAttribute('x2', f1(cx + GR * Math.cos(a2)));
+        grad.setAttribute('y2', f1(cy + GR * Math.sin(a2)));
+    }
 }
 
-function _animIris(el, f0, f1, r0, r1, ms, ease, done) {
+function _animIris(f0, f1, r0, r1, ms, ease, done) {
     const start = performance.now();
     (function tick(now) {
         const t = Math.min((now - start) / ms, 1);
         const e = ease(t);
-        el.style.clipPath = _irisPath(f0 + (f1 - f0) * e, r0 + (r1 - r0) * e);
+        _updateBlades(f0 + (f1 - f0) * e, r0 + (r1 - r0) * e);
         t < 1 ? requestAnimationFrame(tick) : done && done();
     }(performance.now()));
 }
@@ -336,23 +351,22 @@ function showPage(pageId, scrollToTop = true) {
         return;
     }
 
-    const el = document.getElementById('aperture-overlay');
-    const r0 = _irisRot,           r1 = r0 + Math.PI / 6, r2 = r1 + Math.PI / 6;
+    const svg = document.getElementById('aperture-svg');
+    const r0  = _irisRot,  r1 = r0 + Math.PI / 6,  r2 = r1 + Math.PI / 6;
     _irisRot  = r2;
 
-    el.style.clipPath = _irisPath(1, r0);
-    el.style.display  = 'block';
+    _updateBlades(1, r0);
+    svg.style.display = 'block';
 
-    // Iris closes — dark blades sweep in
-    _animIris(el, 1, 0, r0, r1, 360, t => t * t * t, () => {
+    // Blades sweep in — iris closes
+    _animIris(1, 0, r0, r1, 360, t => t * t * t, () => {
         outgoing.classList.remove('active');
         incoming.classList.add('active');
         if (scrollToTop) window.scrollTo({ top: 0 });
 
-        // Iris opens — blades retract to reveal new page
-        _animIris(el, 0, 1, r1, r2, 420, t => 1 - Math.pow(1 - t, 3), () => {
-            el.style.display  = '';
-            el.style.clipPath = '';
+        // Blades retract — iris opens on new page
+        _animIris(0, 1, r1, r2, 420, t => 1 - Math.pow(1 - t, 3), () => {
+            svg.style.display = '';
         });
     });
 }
