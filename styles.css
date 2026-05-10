@@ -118,24 +118,32 @@ body.viewer-open .fixed-nav { display: none; }
 
 .page.active {
     display: block;
-    animation: pageFadeIn 0.38s ease both;
 }
 
-.page.page-leaving {
-    display: block;
-    animation: pageFadeOut 0.28s ease both;
+/* ── Split transition panels ── */
+.split-panel {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: var(--bg-2);
+    z-index: 8000;
     pointer-events: none;
+    will-change: transform;
 }
 
-@keyframes pageFadeIn {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
+.split-panel-top    { top: 0;    transform: translateY(-100%); }
+.split-panel-bottom { bottom: 0; transform: translateY(100%);  }
 
-@keyframes pageFadeOut {
-    from { opacity: 1; transform: translateY(0); }
-    to   { opacity: 0; transform: translateY(-10px); }
-}
+.split-panel-top.sp-close    { animation: spCloseTop    0.35s cubic-bezier(0.7,0,0.3,1) both; }
+.split-panel-bottom.sp-close { animation: spCloseBottom 0.35s cubic-bezier(0.7,0,0.3,1) both; }
+.split-panel-top.sp-open     { animation: spOpenTop     0.38s cubic-bezier(0.7,0,0.3,1) both; }
+.split-panel-bottom.sp-open  { animation: spOpenBottom  0.38s cubic-bezier(0.7,0,0.3,1) both; }
+
+@keyframes spCloseTop    { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+@keyframes spCloseBottom { from { transform: translateY(100%);  } to { transform: translateY(0); } }
+@keyframes spOpenTop     { from { transform: translateY(0); } to { transform: translateY(-100%); } }
+@keyframes spOpenBottom  { from { transform: translateY(0); } to { transform: translateY(100%);  } }
 
 /* ================================================
    HERO SECTION
@@ -874,10 +882,18 @@ body.viewer-open .fixed-nav { display: none; }
         transform: none;
     }
 
-    .page.active,
-    .page.page-leaving {
+    .page.active { animation: none; }
+
+    .split-panel-top.sp-close,
+    .split-panel-bottom.sp-close,
+    .split-panel-top.sp-open,
+    .split-panel-bottom.sp-open {
         animation: none;
-        opacity: 1;
+        transform: translateY(-100%);
+    }
+    .split-panel-bottom.sp-close,
+    .split-panel-bottom.sp-open {
+        transform: translateY(100%);
     }
 
     /* keep a near-instant opacity swap in the viewer so image changes are visible */

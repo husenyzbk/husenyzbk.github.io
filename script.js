@@ -288,12 +288,28 @@ function showPage(pageId, scrollToTop = true) {
         return;
     }
 
-    outgoing.classList.add('page-leaving');
+    const top = document.getElementById('split-panel-top');
+    const bot = document.getElementById('split-panel-bottom');
+
+    // Phase 1 — panels close in from top and bottom
+    top.className = 'split-panel split-panel-top sp-close';
+    bot.className = 'split-panel split-panel-bottom sp-close';
+
     setTimeout(() => {
-        outgoing.classList.remove('active', 'page-leaving');
+        // Switch page while screen is covered
+        outgoing.classList.remove('active');
         incoming.classList.add('active');
         if (scrollToTop) window.scrollTo({ top: 0 });
-    }, 280);
+
+        // Phase 2 — panels split open revealing new page
+        top.className = 'split-panel split-panel-top sp-open';
+        bot.className = 'split-panel split-panel-bottom sp-open';
+
+        setTimeout(() => {
+            top.className = 'split-panel split-panel-top';
+            bot.className = 'split-panel split-panel-bottom';
+        }, 400);
+    }, 370);
 }
 
 function goHome() {
