@@ -1,0 +1,16 @@
+# ── Original full-resolution photos (stay on your machine only) ──────────────
+images/**/*.jpg
+images/**/*.jpeg
+images/**/*.JPG
+images/**/*.JPEG
+images/**/*.png
+images/**/*.PNG
+
+# ── Un-ignore processed copies (watermarked + resized) ───────────────────────
+!images/**/web/
+!images/**/web/**
+!images/**/thumbs/
+!images/**/thumbs/**
+
+# ── Un-ignore the watermark logo ─────────────────────────────────────────────
+!images/HY Photography.png
