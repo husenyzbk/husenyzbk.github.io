@@ -46,13 +46,27 @@ const ALBUMS = {
 
     animals: {
         title:     "Animals",
-        thumbnail: "images/Thumbnails/TH_Lizard.jpg",
+        thumbnail: "images/Thumbnails/IMG_4100.PNG",
         photos: [
             "images/Animals/Lizard.jpg",
             "images/Animals/Fennec.jpg",
             "images/Animals/Eagle.jpg",
             "images/Animals/Lioness.jpg",
             "images/Animals/Spider.jpg",
+            "images/Animals/cat.jpg",
+            "images/Animals/IMG_4157.JPG",
+            "images/Animals/IMG_4314_4.jpg",
+            "images/Animals/IMG_4354.jpg",
+            "images/Animals/IMG_4807-2.jpg",
+            "images/Animals/IMG_5088-2.jpg",
+            "images/Animals/IMG_5243-2.png",
+            "images/Animals/IMG_5243.png",
+            "images/Animals/IMG_5298.png",
+            "images/Animals/IMG_5309.png",
+            "images/Animals/IMG_5420-edit.png",
+            "images/Animals/IMG_5450-edit.png",
+            "images/Animals/IMG_6585.JPG",
+            "images/Animals/IMG_52032.jpg",
         ]
     },
 
@@ -91,10 +105,17 @@ const ALBUMS = {
         subAlbums: {
             flowers: {
                 title:     "Flowers",
-                thumbnail: "",
+                thumbnail: "images/Thumbnails/TH_flower.jpg",
                 photos: [
-                    /* add flower photos here, e.g.:
-                    "images/outdoors/flowers/photo1.jpg", */
+                    
+                    "images/Outdoors/Flowers/IMG_4753.jpg",
+                    "images/Outdoors/Flowers/IMG_4766-2.jpg",
+                    "images/Outdoors/Flowers/IMG_4865.JPG",
+                    "images/Outdoors/Flowers/IMG_4889-2.jpg",
+                    "images/Outdoors/Flowers/IMG_4908-2.jpg",
+                    "images/Outdoors/Flowers/IMG_4914.JPG",
+                    "images/Outdoors/Flowers/IMG_4930-2.jpg",
+                    "images/Outdoors/Flowers/IMG_4950-2.jpg",
                 ]
             },
             buildings: {
@@ -103,6 +124,10 @@ const ALBUMS = {
                 photos: [
                   
                     "images/Outdoors/Buildings & Shops/Mon creme.jpg",
+                    "images/Outdoors/Buildings & Shops/IMG_4492.jpg",
+                    "images/Outdoors/Buildings & Shops/IMG_4595.jpg",
+                    "images/Outdoors/Buildings & Shops/IMG_6433.JPG",
+                    "images/Outdoors/Buildings & Shops/IMG_6439.JPG",
                 ]
             },
             miscellaneous: {
@@ -118,6 +143,10 @@ const ALBUMS = {
                     "images/Outdoors/Miscellaneous/Pyramid3.jpg",
                     "images/Outdoors/Miscellaneous/Mercedes.jpg",
                     "images/Outdoors/Miscellaneous/Wall art.jpg", 
+                    "images/Outdoors/Miscellaneous/beach.jpg",
+                    "images/Outdoors/Miscellaneous/IMG_4446-2.jpg",
+                    "images/Outdoors/Miscellaneous/IMG_4471.JPG",
+                    "images/Outdoors/Miscellaneous/Statues.jpg",
                 ]
             }
         }
