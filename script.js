@@ -432,10 +432,12 @@ function _openFlatAlbum(albumKey, album, parentKey) {
         div.setAttribute('aria-label', `${album.title} photo ${index + 1}`);
 
         const img   = document.createElement('img');
-        img.src     = toThumbPath(photoSrc);
         img.alt     = `${album.title} ${index + 1}`;
         img.loading = 'lazy';
-        img.onerror = () => img.classList.add('img-error');
+        div.classList.add('shimmer');
+        img.addEventListener('load',  () => { img.classList.add('img-loaded'); div.classList.remove('shimmer'); }, { once: true });
+        img.addEventListener('error', () => { img.classList.add('img-error');  div.classList.remove('shimmer'); }, { once: true });
+        img.src = toThumbPath(photoSrc);
         div.appendChild(img);
 
         div.addEventListener('click', () => openFullscreen(index));
@@ -761,3 +763,28 @@ function initScrollReveal() {
 
     document.querySelectorAll('.reveal').forEach(el => scrollObserver.observe(el));
 }
+
+/* ================================================
+   SPLASH SCREEN
+   Shows the logo for at least 1.4 s, then fades
+   out once the page has fully loaded.
+================================================ */
+(function initSplash() {
+    const splash  = document.getElementById('splash-screen');
+    const minShow = 1400;
+    const start   = Date.now();
+
+    function hideSplash() {
+        const wait = Math.max(0, minShow - (Date.now() - start));
+        setTimeout(() => {
+            splash.classList.add('sp-hiding');
+            setTimeout(() => splash.remove(), 650);
+        }, wait);
+    }
+
+    if (document.readyState === 'complete') {
+        hideSplash();
+    } else {
+        window.addEventListener('load', hideSplash, { once: true });
+    }
+}());

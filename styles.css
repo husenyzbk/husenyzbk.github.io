@@ -35,6 +35,36 @@ img { display: block; max-width: 100%; }
 button { font-family: var(--font); cursor: pointer; }
 
 /* ================================================
+   SPLASH SCREEN
+================================================ */
+#splash-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-2);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.6s ease;
+}
+
+#splash-screen.sp-hiding {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.splash-logo {
+    width: clamp(140px, 28vw, 260px);
+    opacity: 0;
+    animation: splashLogoIn 0.9s ease 0.15s both;
+}
+
+@keyframes splashLogoIn {
+    from { opacity: 0; transform: scale(0.82); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+/* ================================================
    FIXED NAVIGATION
 ================================================ */
 .fixed-nav {
@@ -523,7 +553,24 @@ body.viewer-open .fixed-nav { display: none; }
     width: 100%;
     height: auto;
     display: block;
-    transition: transform 0.5s var(--ease);
+    opacity: 0;
+    transition: transform 0.5s var(--ease), opacity 0.4s ease;
+}
+
+.album-photo img.img-loaded {
+    opacity: 1;
+}
+
+.album-photo.shimmer {
+    min-height: 180px;
+    background: linear-gradient(90deg, #161616 25%, #232323 50%, #161616 75%);
+    background-size: 200% 100%;
+    animation: shimmerWave 1.6s ease-in-out infinite;
+}
+
+@keyframes shimmerWave {
+    0%   { background-position:  200% 0; }
+    100% { background-position: -200% 0; }
 }
 
 .album-photo:hover img {
@@ -866,6 +913,10 @@ body.viewer-open .fixed-nav { display: none; }
         opacity: 1;
         transform: none;
     }
+
+    .album-photo.shimmer { animation: none; }
+    .album-photo img { opacity: 1; }
+    .splash-logo { animation: none; opacity: 1; }
 
     .page.active { animation: none; }
 
