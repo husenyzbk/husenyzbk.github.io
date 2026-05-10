@@ -210,6 +210,7 @@ function preloadAdjacent(index) {
 
 /* ---- Initialise on page load ---- */
 document.addEventListener('DOMContentLoaded', () => {
+    initSplash();   // first — must run even if anything below throws
     applyConfig();
     buildCategories();
     initScrollReveal();
@@ -766,25 +767,27 @@ function initScrollReveal() {
 
 /* ================================================
    SPLASH SCREEN
-   Shows the logo for at least 1.4 s, then fades
-   out once the page has fully loaded.
+   Shows for at least 1.4 s. Hides on window load,
+   with a 5 s absolute fallback so a slow/stuck
+   resource can never keep it up permanently.
 ================================================ */
-(function initSplash() {
-    const splash  = document.getElementById('splash-screen');
-    const minShow = 1400;
+function initSplash() {
+    const splash = document.getElementById('splash-screen');
+    if (!splash) return;
+
     const start   = Date.now();
+    let   hidden  = false;
 
     function hideSplash() {
-        const wait = Math.max(0, minShow - (Date.now() - start));
+        if (hidden) return;
+        hidden = true;
+        const wait = Math.max(0, 1400 - (Date.now() - start));
         setTimeout(() => {
             splash.classList.add('sp-hiding');
             setTimeout(() => splash.remove(), 650);
         }, wait);
     }
 
-    if (document.readyState === 'complete') {
-        hideSplash();
-    } else {
-        window.addEventListener('load', hideSplash, { once: true });
-    }
-}());
+    window.addEventListener('load', hideSplash, { once: true });
+    setTimeout(hideSplash, 5000); // absolute fallback
+}
