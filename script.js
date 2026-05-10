@@ -62,15 +62,16 @@ const ALBUMS = {
         subAlbums: {
             events: {
                 title:     "Events",
-                thumbnail: "",   /* set a thumbnail path once you have photos */
+                thumbnail: "",   
                 photos: [
-                    /* add event photos here, e.g.:
-                    "images/people/events/photo1.jpg", */
+                
+                    "images/People/Events/Fatteh.JPG",
+                    "images/People/Events/Hummus.JPG",
                 ]
             },
             portraits: {
                 title:     "Portraits",
-                thumbnail: "",   /* set a thumbnail path once you have photos */
+                thumbnail: "",   
                 photos: [
                     /* add portrait photos here, e.g.:
                     "images/people/portraits/photo1.jpg",
