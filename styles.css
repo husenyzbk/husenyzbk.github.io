@@ -305,7 +305,7 @@ body.viewer-open .fixed-nav { display: none; }
     min-width: 260px;
     max-width: 380px;
     position: relative;
-    border-radius: 6px;
+    border-radius: 20px;
     overflow: hidden;
     cursor: pointer;
     aspect-ratio: 2 / 3;
