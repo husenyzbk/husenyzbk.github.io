@@ -46,7 +46,7 @@ const ALBUMS = {
 
     animals: {
         title:     "Animals",
-        thumbnail: "images/Thumbnails/TH_Lizard.jpg",
+        thumbnail: "images/Animals/thumbs/Lizard.jpg",
         photos: [
             "images/Animals/Lizard.jpg",
             "images/Animals/Fennec.jpg",
