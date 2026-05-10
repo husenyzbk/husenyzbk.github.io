@@ -113,6 +113,7 @@ const ALBUMS = {
                     "images/Outdoors/Flowers/IMG_4865.JPG",
                     "images/Outdoors/Flowers/IMG_4889-2.jpg",
                     "images/Outdoors/Flowers/IMG_4908-2.jpg",
+                    "images/Outdoors/Flowers/image00005.jpg",
                     "images/Outdoors/Flowers/IMG_4914.JPG",
                     "images/Outdoors/Flowers/IMG_4930-2.jpg",
                     "images/Outdoors/Flowers/IMG_4950-2.jpg",
@@ -127,6 +128,7 @@ const ALBUMS = {
                     "images/Outdoors/Buildings & Shops/IMG_4492.jpg",
                     "images/Outdoors/Buildings & Shops/IMG_4595.jpg",
                     "images/Outdoors/Buildings & Shops/IMG_6433.JPG",
+                    "images/Outdoors/Buildings & Shops/wall.jpg",
                     "images/Outdoors/Buildings & Shops/IMG_6439.JPG",
                 ]
             },
@@ -290,6 +292,12 @@ function goHome() {
 }
 
 function goBack() {
+    /* if fullscreen is open, close it — don't navigate away from the album */
+    if (document.getElementById('fullscreen-viewer').classList.contains('active')) {
+        closeFullscreen();
+        return;
+    }
+
     if (navigationState === 'album' && currentParentKey !== null) {
         /* sub-album → go back to parent's sub-category page */
         openSubcategoryPage(currentParentKey);
@@ -402,6 +410,7 @@ function openFullscreen(index) {
     updateCounter();
     preloadAdjacent(index);
     document.getElementById('fullscreen-viewer').classList.add('active');
+    document.body.classList.add('viewer-open');
     showDoubleTapHint();
     document.getElementById('zoom-level').textContent = '100%';
     document.body.style.overflow = 'hidden';
@@ -409,6 +418,7 @@ function openFullscreen(index) {
 
 function closeFullscreen() {
     document.getElementById('fullscreen-viewer').classList.remove('active');
+    document.body.classList.remove('viewer-open');
     document.body.style.overflow = '';
     currentZoom = 1;
     currentPan = { x: 0, y: 0 };

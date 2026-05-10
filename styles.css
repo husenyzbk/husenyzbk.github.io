@@ -70,6 +70,9 @@ button { font-family: var(--font); cursor: pointer; }
 /* Back button hidden by default — shown via JS on album page */
 .back-btn { display: none; }
 
+/* Hide nav entirely when fullscreen viewer is open */
+body.viewer-open .fixed-nav { display: none; }
+
 /* ================================================
    FLOATING INSTAGRAM BUTTON
 ================================================ */
