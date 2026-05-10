@@ -120,30 +120,15 @@ body.viewer-open .fixed-nav { display: none; }
     display: block;
 }
 
-/* ── Split transition panels ── */
-.split-panel {
+/* ── Aperture / iris page transition overlay ── */
+#aperture-overlay {
     position: fixed;
-    left: 0;
-    width: 100%;
-    height: 50%;
+    inset: 0;
     background: var(--bg-2);
     z-index: 8000;
     pointer-events: none;
-    will-change: transform;
+    display: none;
 }
-
-.split-panel-top    { top: 0;    transform: translateY(-100%); }
-.split-panel-bottom { bottom: 0; transform: translateY(100%);  }
-
-.split-panel-top.sp-close    { animation: spCloseTop    0.35s cubic-bezier(0.7,0,0.3,1) both; }
-.split-panel-bottom.sp-close { animation: spCloseBottom 0.35s cubic-bezier(0.7,0,0.3,1) both; }
-.split-panel-top.sp-open     { animation: spOpenTop     0.38s cubic-bezier(0.7,0,0.3,1) both; }
-.split-panel-bottom.sp-open  { animation: spOpenBottom  0.38s cubic-bezier(0.7,0,0.3,1) both; }
-
-@keyframes spCloseTop    { from { transform: translateY(-100%); } to { transform: translateY(0); } }
-@keyframes spCloseBottom { from { transform: translateY(100%);  } to { transform: translateY(0); } }
-@keyframes spOpenTop     { from { transform: translateY(0); } to { transform: translateY(-100%); } }
-@keyframes spOpenBottom  { from { transform: translateY(0); } to { transform: translateY(100%);  } }
 
 /* ================================================
    HERO SECTION
@@ -884,17 +869,7 @@ body.viewer-open .fixed-nav { display: none; }
 
     .page.active { animation: none; }
 
-    .split-panel-top.sp-close,
-    .split-panel-bottom.sp-close,
-    .split-panel-top.sp-open,
-    .split-panel-bottom.sp-open {
-        animation: none;
-        transform: translateY(-100%);
-    }
-    .split-panel-bottom.sp-close,
-    .split-panel-bottom.sp-open {
-        transform: translateY(100%);
-    }
+    /* iris transition is disabled via JS matchMedia check, nothing needed here */
 
     /* keep a near-instant opacity swap in the viewer so image changes are visible */
     #viewer-img {
