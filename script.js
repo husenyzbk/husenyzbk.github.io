@@ -46,7 +46,7 @@ const ALBUMS = {
 
     animals: {
         title:     "Animals",
-        thumbnail: "images/Animals/thumbs/Lizard.jpg",
+        thumbnail: "images/Thumbnails/thumbs/TH_Lizard.jpg",
         photos: [
             "images/Animals/Lizard.jpg",
             "images/Animals/Fennec.jpg",
@@ -58,7 +58,7 @@ const ALBUMS = {
 
     people: {
         title:     "People",
-        thumbnail: "images/Thumbnails/TH_Lizard.jpg",
+        thumbnail: "images/Thumbnails/thumbs/TH_Lizard.jpg",
         subAlbums: {
             events: {
                 title:     "Events",
@@ -86,7 +86,7 @@ const ALBUMS = {
 
     outdoors: {
         title:     "Outdoors",
-        thumbnail: "images/Thumbnails/TH_Pyramid2.jpg",
+        thumbnail: "images/Thumbnails/thumbs/TH_Pyramid2.jpg",
         subAlbums: {
             flowers: {
                 title:     "Flowers",
@@ -98,7 +98,7 @@ const ALBUMS = {
             },
             buildings: {
                 title:     "Buildings & Shops",
-                thumbnail: "images/Thumbnails/TH_Mon creme.jpg",
+                thumbnail: "images/Thumbnails/thumbs/TH_Mon creme.jpg",
                 photos: [
                   
                     "images/Outdoors/Buildings & Shops/Mon creme.jpg",
@@ -106,7 +106,7 @@ const ALBUMS = {
             },
             miscellaneous: {
                 title:     "Miscellaneous",
-                thumbnail: "images/Thumbnails/TH_Wall art.jpg",
+                thumbnail: "images/Thumbnails/thumbs/TH_Wall art.jpg",
                 photos: [
 
                     "images/Outdoors/Miscellaneous/Boat.JPG",
