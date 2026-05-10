@@ -14,3 +14,7 @@ images/**/*.PNG
 
 # ── Un-ignore the watermark logo ─────────────────────────────────────────────
 !images/HY Photography.png
+
+# ── Un-ignore site layout images (hero + bio) — no watermark needed ──────────
+!images/hero.jpg
+!images/bio.jpg
