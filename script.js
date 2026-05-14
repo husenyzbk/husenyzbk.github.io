@@ -219,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSwipeControls();
     initViewerPan();
     initImageProtection();
+    initParallax();
     document.getElementById('footer-year').textContent = new Date().getFullYear();
 });
 
@@ -346,8 +347,14 @@ function goHome() {
     currentParentKey = null;
     currentAlbumKey  = null;
     currentPhotos    = [];
+    // Reset hero transform instantly so the grey gap doesn't flash during the
+    // iris transition. refreshParallax runs again after the page switch completes.
+    const heroBg = document.getElementById('hero-bg');
+    if (heroBg) heroBg.style.transform = 'translateY(0px)';
     showPage('home-page');
     document.getElementById('back-btn').style.display = 'none';
+    // Re-run after the page is visible so bio + grid have correct initial offsets
+    requestAnimationFrame(refreshParallax);
 }
 
 function goBack() {
@@ -460,13 +467,12 @@ function _openFlatAlbum(albumKey, album, parentKey) {
 function openFullscreen(index) {
     currentPhotoIndex = index;
     currentZoom       = 1;
+    currentPan        = { x: 0, y: 0 };
 
     const img = document.getElementById('viewer-img');
-    currentPan          = { x: 0, y: 0 };
     img.style.opacity   = '1';
     img.style.transform = 'translate(0px, 0px) scale(1)';
-    img.src             = toWebPath(currentPhotos[index]);
-    img.onerror         = () => { img.style.opacity = '0.3'; };
+    loadViewerImage(currentPhotos[index]);
 
     updateCounter();
     preloadAdjacent(index);
@@ -508,11 +514,10 @@ function switchImage(src) {
 
     clearTimeout(switchTimeout);
     switchTimeout = setTimeout(() => {
-        img.src             = toWebPath(src);
-        img.onerror         = () => { img.style.opacity = '0.3'; };
         currentPan          = { x: 0, y: 0 };
         img.style.opacity   = '1';
         img.style.transform = 'translate(0px, 0px) scale(1)';
+        loadViewerImage(src);
     }, 270);
 
     updateCounter();
@@ -763,6 +768,65 @@ function initScrollReveal() {
     }, { threshold: 0.12 });
 
     document.querySelectorAll('.reveal').forEach(el => scrollObserver.observe(el));
+}
+
+/* ================================================
+   PARALLAX HERO
+================================================ */
+/* Called by goHome() to instantly clear a stale hero transform,
+   and on load to set the initial state before any scrolling occurs. */
+let refreshParallax = () => {};
+
+function initParallax() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if ('ontouchstart' in window) return;
+
+    const heroBg = document.getElementById('hero-bg');
+
+    function doParallax() {
+        if (!document.getElementById('home-page').classList.contains('active')) return;
+        if (heroBg) heroBg.style.transform = `translateY(${window.scrollY * 0.22}px)`;
+    }
+
+    refreshParallax = doParallax;
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => { doParallax(); ticking = false; });
+    }, { passive: true });
+
+    requestAnimationFrame(doParallax);
+}
+
+/* ================================================
+   BLUR-UP PROGRESSIVE IMAGE LOADING
+================================================ */
+let _hqLoadToken = 0;
+
+function loadViewerImage(photoSrc) {
+    const img    = document.getElementById('viewer-img');
+    const viewer = document.getElementById('fullscreen-viewer');
+    const token  = ++_hqLoadToken;
+
+    // Show the small thumbnail immediately with a blur as placeholder
+    img.src     = toThumbPath(photoSrc);
+    img.onerror = () => { img.style.opacity = '0.3'; };
+    viewer.classList.add('hq-loading');
+
+    // Load the full-res version silently in the background
+    const hq   = new Image();
+    hq.onload  = () => {
+        if (token !== _hqLoadToken) return; // navigated away — discard
+        img.src = toWebPath(photoSrc);
+        viewer.classList.remove('hq-loading');
+    };
+    hq.onerror = () => {
+        if (token !== _hqLoadToken) return;
+        viewer.classList.remove('hq-loading');
+    };
+    hq.src = toWebPath(photoSrc);
 }
 
 /* ================================================
