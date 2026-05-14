@@ -779,7 +779,6 @@ let refreshParallax = () => {};
 
 function initParallax() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if ('ontouchstart' in window) return;
 
     const heroBg = document.getElementById('hero-bg');
 
